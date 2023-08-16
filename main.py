@@ -1,21 +1,22 @@
 import fitz
 from flask import Flask, request, jsonify
 import os, uuid
-import atexit
+# import atexit
 
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+## If user is done his work, to free space from modified PDFs
 # List to store paths of modified PDFs
-modified_pdfs_to_delete = []
+# modified_pdfs_to_delete = []
 
-@atexit.register
-def delete_modified_pdfs_on_exit():
-    for pdf_path in modified_pdfs_to_delete:
-        os.remove(pdf_path)
-    print("Modified PDFs deleted on program exit.")
+# @atexit.register
+# def delete_modified_pdfs_on_exit():
+#     for pdf_path in modified_pdfs_to_delete:
+#         os.remove(pdf_path)
+#     print("Modified PDFs deleted on program exit.")
 
 @app.route('/searchText', methods=['POST'])
 def search_text():
@@ -26,7 +27,6 @@ def search_text():
     for filename in os.listdir(app.config['UPLOAD_FOLDER']):
         if filename.endswith('.pdf'):
             pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            # pdf_data = pdf_path.read()
             # Search and highlight text
             pdf_document = fitz.open(pdf_path)
             modified_pdf_path = f"modified_{filename}"
@@ -42,7 +42,7 @@ def search_text():
                         page.add_highlight_annot(rect)
 
                     pdf_document.save(pdf_path)
-                    modified_pdfs_to_delete.append(pdf_path)
+                    # modified_pdfs_to_delete.append(pdf_path)
                     modified_pdfs.append(pdf_path)
 
     return jsonify({'modified_pdfs': modified_pdfs}), 200
