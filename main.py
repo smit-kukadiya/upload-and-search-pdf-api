@@ -54,8 +54,8 @@ def search_text():
                         new_pdf_path = f"{MY_DOMIAN}uploads/{modified_pdf_path}"
                         modified_pdfs.append(new_pdf_path)
 
-        # return jsonify({'modified_pdfs': modified_pdfs}), 200
-        return f'search_results: {", ".join(modified_pdfs)}'
+        return jsonify({'modified_pdfs': modified_pdfs}), 200
+        # return f'search_results: {", ".join(modified_pdfs)}'
     return render_template('search.html')
 
 @app.route('/uploadPdf', methods=['GET', 'POST'])
@@ -78,8 +78,8 @@ def upload_pdf():
             pdf_path = f"{MY_DOMIAN}uploads/{filename}"
             pdf_urls.append(pdf_path)
 
-        # return jsonify({'pdf_urls': pdf_urls}), 200
-        return f'Files uploaded successfully. Uploaded files: {", ".join(pdf_urls)}'
+        return jsonify({'pdf_urls': pdf_urls}), 200
+        # return f'Files uploaded successfully. Uploaded files: {", ".join(pdf_urls)}'
     return render_template('upload.html')
 
 @app.route('/uploads/<path:filename>', methods=['GET'])
