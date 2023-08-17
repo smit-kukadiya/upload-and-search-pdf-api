@@ -1,9 +1,11 @@
 import fitz
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import os, uuid
+# import boto
 # import atexit
 
 app = Flask(__name__)
+# app.config.from_object('config')
 
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -65,11 +67,26 @@ def upload_pdf():
 
         filename = f"{str(uuid.uuid4())}.pdf"
         pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        # s3.upload_file(pdf_path, 'upload-and-search', f'uploads/{filename}')
         pdf_file.save(pdf_path)
+        pdf_path = f"http://your-domain.com/uploads/{filename}"
         pdf_urls.append(pdf_path)
 
     return jsonify({'pdf_urls': pdf_urls}), 200
 
+@app.route('/uploads/<path:filename>', methods=['GET'])
+def get_pdf(filename):
+    pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+    if os.path.exists(pdf_path) and pdf_path.endswith('.pdf'):
+        return send_file(
+            pdf_path,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=filename
+        )
+    else:
+        return 'PDF not found', 404
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
