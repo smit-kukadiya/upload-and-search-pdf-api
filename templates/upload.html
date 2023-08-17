@@ -1,0 +1,9 @@
+{% include "header.html" %}
+
+<h1>Upload PDF File</h1>
+<form action="/uploadPdf" method="POST" enctype="multipart/form-data">
+    <input type="file" name="pdfs" multiple>
+    <input type="submit" value="Upload">
+</form>
+
+{% include "footer.html" %}
