@@ -8,6 +8,10 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+@app.route("/")
+def home_page():
+    return "Hello world"
+
 ## If user is done his work, to free space from modified PDFs
 # List to store paths of modified PDFs
 # modified_pdfs_to_delete = []
